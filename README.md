@@ -2,17 +2,17 @@
 
 CIA Vault7 leak describes Stinger[0] as a Privilege Escalation module in the "Fine Dining" toolset. Stinger
 is a "UAC bypass that obtains the token from an auto-elevated process, modifies it, and reuses it to 
-execute as administrator". This is an implementation of Stinger, including debugging routines and some
-additional tradecraft to obtain `NT AUTHORITY\\SYSTEM` rights. The exploit works on Windows 7 through Windows 
-10 to run privileged code through token hijacking of an autoelevated process (e.g. `Taskmgr.exe`) from 
-a UAC restricted process. This technique to steal a privileged token and elevate a thread also works on 
-Windows 11, however it is not possible to use it for CreateProcessWithLogonW which detects `BAD IMPERSONATION` 
-or with CreateFile, Registry, Process, COM ITask*, Named Pipes etc as the operations fail with `ACESS_DENIED` 
-or `E_BAD_IMPERSONATION`. This exploit closely resembles UAC Magic[1] and thus it is believed that Stinger is 
-an implementation of UAC Magic based on the description and time which it was used within the CIA for modular 
-malware in "Fine Dining". This is a tokenhijacking attack that bypasses UAC on Windows 7 -> Windows 10, and on 
-Windows 11 gives only an elevated thread to further experiment with. This exploit leverages a COM object 
-ITaskService from the privileged thread to run commands under `NT AUTHORITY\SYSTEM`. 
+execute as administrator". This is an implementation of Stinger, including debugging routines and additional 
+tradecraft for `NT AUTHORITY\SYSTEM` rights. The exploit works on Windows 7 through Windows 10 to run privileged 
+code through token hijacking of an autoelevated process (e.g. `Taskmgr.exe`) from a UAC restricted process. This 
+technique to steal a privileged token and elevate a thread also works on Windows 11, however it is not possible 
+to use it for CreateProcessWithLogonW which detects `BAD IMPERSONATION` or with CreateFile, Registry, Process, 
+COM ITask*, Named Pipes etc as the operations fail with `ACESS_DENIED` or `E_BAD_IMPERSONATION`. This exploit 
+closely resembles UAC Magic[1] and thus it is believed that Stinger is an implementation of UAC Magic based on 
+the description and time which it was used within the CIA for modular malware in "Fine Dining". This is a 
+tokenhijacking attack that bypasses UAC on Windows 7 -> Windows 10, and on Windows 11 gives only an elevated 
+thread to further experiment with. This exploit leverages a COM object ITaskService from the privileged thread 
+to run commands under `NT AUTHORITY\SYSTEM`. 
 
 Here is an example of the UAC bypass being used on a vulnerable Windows 7 host. 
 
