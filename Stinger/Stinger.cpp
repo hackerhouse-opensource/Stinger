@@ -713,7 +713,7 @@ int main(int argc, char* argv[]) {
 	shExInfo.lpFile = wAutoElevate;
 	shExInfo.lpParameters = L"";
 	shExInfo.lpDirectory = 0;
-	shExInfo.nShow = SW_SHOW;
+	shExInfo.nShow = SW_HIDE;
 	shExInfo.hInstApp = 0;
 	if (ShellExecuteEx(&shExInfo)) {
 		HANDLE hToken;
@@ -766,6 +766,11 @@ int main(int argc, char* argv[]) {
 		else {
 			std::cout << "Failed to open process token: " << GetLastError() << std::endl;
 		}
+		if (!TerminateProcess(shExInfo.hProcess, 0)) {
+			std::cerr << "Failed to terminate process. Error: " << GetLastError() << std::endl;
+			return -1;
+		}
+		CloseHandle(shExInfo.hProcess);
 	}
 	else {
 		std::cout << "ShellExecuteEx failed: " << GetLastError() << std::endl;
