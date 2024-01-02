@@ -3,7 +3,7 @@
 CIA Vault7 leak describes Stinger[0] as a Privilege Escalation module in the "Fine Dining" toolset. Stinger
 is a "UAC bypass that obtains the token from an auto-elevated process, modifies it, and reuses it to 
 execute as administrator". This is an implementation of Stinger, including debugging routines and some
-additional tradecraft to obtain `NT AUTHORITY\\SYSTEM` rights. The exploit works on Windows 7 through Windows 
+additional tradecraft to obtain `NT AUTHORITY\SYSTEM` rights. The exploit works on Windows 7 through Windows 
 10 to run privileged code through token hijacking of an autoelevated process (e.g. `Taskmgr.exe`) from 
 a UAC restricted process. This technique to steal a privileged token and elevate a thread also works on 
 Windows 11, however it is not possible to use it for CreateProcessWithLogonW which detects `BAD IMPERSONATION` 
