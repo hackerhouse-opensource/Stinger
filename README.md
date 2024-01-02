@@ -88,7 +88,8 @@ Initialized medium IL SID
 Token lowered to medium integrity
 COM init...
 Attemping to bypass UAC with the token...
-ImpersonateLoggedOnUser succeeded..
+ImpersonateLoggedOnUser succeeded.. 
+Dumping our new security context..
 User: TestUser
 Domain: TESTPC
 User SID: S-1-5-21-3089230831-4110903467-601958294-1001

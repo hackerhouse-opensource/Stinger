@@ -125,7 +125,8 @@ DWORD WINAPI TestPrivilegedOperations(LPVOID lpParam) {
 		std::cerr << "ImpersonateLoggedOnUser failed with error: " << GetLastError() << std::endl;
 		return 1;
 	}
-	std::cout << "ImpersonateLoggedOnUser succeeded.. " << std::endl;
+	std::cout << "ImpersonateLoggedOnUser succeeded.." << std::endl;
+	std::cout << "Dumping our new security context.." << std::endl; "
 	PrintSecurityContext();
 	/* // Launch a shell on the desktop, use this for running commands in the Administrator security context.
 	STARTUPINFOW si = {sizeof(si)};
