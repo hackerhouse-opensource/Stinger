@@ -605,6 +605,7 @@ void PrintDacl(PACL dacl) {
 // 4. The authenticated identity is same as the caller.
 //
 // Undocumented that tokens cannot be used for impersonation across integrity levels.
+// Call this function with -1 to explicitly check the main process token.
 void PrintSecurityContext(HANDLE token) {
 	BOOL result;
 	DWORD bufferSize = 0;
